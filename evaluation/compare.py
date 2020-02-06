@@ -7,6 +7,34 @@ import glog
 import numpy as np
 
 
+def show_dis(x, y, thr=1e-4):
+    x = x.flatten()
+    y = y.flatten()
+
+    def _show(index):
+        for i in range(index - 4, index + 5):
+            i = i % len(x)
+
+            dis1 = np.abs(x[i] - y[i])
+            dis2 = np.abs(x[i] - y[i]) / (np.abs(y[i]) + 1e-12)
+
+            glog.info('{}\t{}\t{}\t{}\t{}'.format(
+                i, x[i], y[i], dis1, dis2)) 
+
+            if dis1 > thr and dis2 > thr:
+                raise ValueError()
+
+    glog.info('----------------')
+    dis = np.abs(x - y)
+    index = np.argsort(dis)[-1]
+    _show(index)
+
+    glog.info('----------------')
+    dis = np.abs(x - y) / (np.abs(y) + 1e-12)
+    index = np.argsort(dis)[-1]
+    _show(index)
+
+
 def load(path):
     """
     
@@ -70,7 +98,7 @@ def maer(x, y, eps=1e-6):
     return score
 
 
-def compare_all(x, y):
+def compare_all(x, y, show=True, thr=1e-4):
     """
     Args:
         x: ndarray
@@ -83,6 +111,11 @@ def compare_all(x, y):
 
     meam_abs_error_rate = maer(x, y)
     glog.info('meam_abs_error_rate: {}'.format(meam_abs_error_rate))
+
+    if show:
+        show_dis(x, y, thr)
+
+    return cos_sim, meam_abs_error_rate
 
 
 if __name__ == '__main__':
