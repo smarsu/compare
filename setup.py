@@ -35,4 +35,4 @@ def config_setup(name):
   )
 
 print('---------------- Setup compare ----------------')
-config_setup('compare')
+config_setup('evaluation')

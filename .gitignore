@@ -1,6 +1,6 @@
 build
 dist
-compare.egg-info
+evaluation.egg-info
 
 .DS_Store
 
